@@ -381,10 +381,42 @@ void enable_dmm_clocks(void)
 void setup_clocks_for_console(void)
 {
 	unlock_pll_control_mmr();
+
+	/* Enable all UARTs - console will be on one of them */
+
 	/* UART0 */
 	writel(PRCM_MOD_EN, &cmalwon->uart0clkctrl);
 	while (readl(&cmalwon->uart0clkctrl) != PRCM_MOD_EN)
 		;
+	
+#define McBSP_UART_CLKSRC (PLL_SUBSYS_BASE + 0x2D8)
+
+	writel((0x1 << 5), McBSP_UART_CLKSRC);
+	while(readl(McBSP_UART_CLKSRC) != (0x1 << 5));        //Set UART4 clock source to 48MHz
+#if 0
+	/* UART1 */
+	writel(PRCM_MOD_EN, &cmalwon->uart1clkctrl);
+	while (readl(&cmalwon->uart1clkctrl) != PRCM_MOD_EN)
+		;
+	/* UART2 */
+	writel(PRCM_MOD_EN, &cmalwon->uart2clkctrl);
+	while (readl(&cmalwon->uart2clkctrl) != PRCM_MOD_EN)
+		;
+	/* UART3 */
+	writel(PRCM_MOD_EN, &cmalwon->uart3clkctrl);
+	while (readl(&cmalwon->uart3clkctrl) != PRCM_MOD_EN)
+		;
+#endif
+	/* UART4 */
+	writel(PRCM_MOD_EN, &cmalwon->uart4clkctrl);
+	while (readl(&cmalwon->uart4clkctrl) != PRCM_MOD_EN)
+		;
+#if 0
+	/* UART5 */
+	writel(PRCM_MOD_EN, &cmalwon->uart5clkctrl);
+	while (readl(&cmalwon->uart5clkctrl) != PRCM_MOD_EN)
+		;
+#endif
 }
 
 void setup_early_clocks(void)

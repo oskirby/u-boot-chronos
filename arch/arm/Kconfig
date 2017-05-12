@@ -521,6 +521,10 @@ config TARGET_TI816X_EVM
 	bool "Support ti816x_evm"
 	select ARCH_OMAP2
 
+config TARGET_CHRONOS14
+	bool "Support chronos14"
+	select ARCH_OMAP2
+
 config TARGET_BCM23550_W1D
 	bool "Support bcm23550_w1d"
 	select CPU_V7
@@ -1260,6 +1264,7 @@ source "board/ti/am43xx/Kconfig"
 source "board/birdland/bav335x/Kconfig"
 source "board/ti/ti814x/Kconfig"
 source "board/ti/ti816x/Kconfig"
+source "board/ti/chronos14/Kconfig"
 source "board/timll/devkit3250/Kconfig"
 source "board/toradex/colibri_pxa270/Kconfig"
 source "board/toradex/colibri_vf/Kconfig"

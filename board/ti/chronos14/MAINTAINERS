@@ -1,0 +1,6 @@
+Chronos 1.4c BOARD
+M:	Owen Kirby <oskirby@gmail.com>
+S:	Maintained
+F:	board/ti/chronos/
+F:	include/configs/ti814x_evm.h
+F:	configs/chronos14_defconfig
