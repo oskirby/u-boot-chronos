@@ -40,9 +40,8 @@
 	"loadaddr=0x80200000\0" \
 	"fdtaddr=0x80F80000\0" \
 	"rdaddr=0x81000000\0" \
-	"bootfile=/boot/uImage\0" \
-	"fdtfile=\0" \
-	"console=ttyO0,115200n8\0" \
+	"fdtfile=chronos-14c.dtb\0" \
+	"console=ttyO4,115200n8\0" \
 	"optargs=\0" \
 	"mmcdev=0\0" \
 	"mmcroot=/dev/mmcblk0p2 ro\0" \
@@ -62,15 +61,15 @@
 		"root=${ramroot} " \
 		"rootfstype=${ramrootfstype}\0" \
 	"loadramdisk=fatload mmc ${mmcdev} ${rdaddr} ramdisk.gz\0" \
-	"loaduimagefat=fatload mmc ${mmcdev} ${loadaddr} ${bootfile}\0" \
-	"loaduimage=ext2load mmc ${mmcdev}:2 ${loadaddr} ${bootfile}\0" \
+	"loaduimagefat=fatload mmc ${mmcdev} ${loadaddr} uImage\0" \
+	"loaduimage=ext2load mmc ${mmcdev}:2 ${loadaddr} uImage\0" \
+	"loadzimage=ext2load mmc ${mmcdev}:2 ${loadaddr} zImage\0" \
 	"mmcboot=echo Booting from mmc ...; " \
 		"run mmcargs; " \
-		"bootm ${loadaddr}\0" \
+		"bootz ${loadaddr}\0" \
 	"ramboot=echo Booting from ramdisk ...; " \
 		"run ramargs; " \
-		"bootm ${loadaddr}\0" \
-	"fdtfile=ti814x-evm.dtb\0" \
+		"bootz ${loadaddr}\0" \
 
 #define CONFIG_BOOTCOMMAND \
 	"mmc dev ${mmcdev}; if mmc rescan; then " \
@@ -83,7 +82,7 @@
 			"echo Running uenvcmd ...;" \
 			"run uenvcmd;" \
 		"fi;" \
-		"if run loaduimage; then " \
+		"if run loadzimage; then " \
 			"run mmcboot;" \
 		"fi;" \
 	"fi;" \
