@@ -31,7 +31,8 @@ static struct ctrl_dev *cdev = (struct ctrl_dev *)CTRL_DEVICE_BASE;
 
 /* UART Defines */
 #ifdef CONFIG_SPL_BUILD
-static const struct cmd_control evm_ddr2_cctrl_data = {
+/* TODO: I think these are all the same between DDR2 and DDR3...  should probably investigate further. */
+static const struct cmd_control evm_ddr3_cctrl_data = {
 	.cmd0csratio	= 0x80,
 	.cmd0iclkout	= 0x00,
 
@@ -42,38 +43,47 @@ static const struct cmd_control evm_ddr2_cctrl_data = {
 	.cmd2iclkout	= 0x00,
 };
 
-static const struct emif_regs evm_ddr2_emif0_regs = {
-	.sdram_config			= 0x40801ab2,
-	.ref_ctrl			= 0x10000c30,
-	.sdram_tim1			= 0x0aaaf552,
-	.sdram_tim2			= 0x043631d2,
-	.sdram_tim3			= 0x00000327,
-	.emif_ddr_phy_ctlr_1		= 0x00000007
+static const struct emif_regs evm_ddr3_emif0_regs = {
+	.sdram_config			= 0x61c012b2,
+	.ref_ctrl			= 0x00000c30,
+	.sdram_tim1			= 0x0aaad4db,
+	.sdram_tim2			= 0x20437fda,
+	.sdram_tim3			= 0x507f83ff,
+	.emif_ddr_phy_ctlr_1		= 0x00173209
 };
 
-static const struct emif_regs evm_ddr2_emif1_regs = {
-	.sdram_config			= 0x40801ab2,
-	.ref_ctrl			= 0x10000c30,
-	.sdram_tim1			= 0x0aaaf552,
-	.sdram_tim2			= 0x043631d2,
-	.sdram_tim3			= 0x00000327,
-	.emif_ddr_phy_ctlr_1		= 0x00000007
+static const struct emif_regs evm_ddr3_emif1_regs = {
+	.sdram_config			= 0x61c012b2,
+	.ref_ctrl			= 0x00000c30,
+	.sdram_tim1			= 0x0aaad4db,
+	.sdram_tim2			= 0x20437fda,
+	.sdram_tim3			= 0x507f83ff,
+	.emif_ddr_phy_ctlr_1		= 0x00173209
 };
 
 const struct dmm_lisa_map_regs evm_lisa_map_regs = {
 	.dmm_lisa_map_0			= 0x00000000,
 	.dmm_lisa_map_1			= 0x00000000,
-	.dmm_lisa_map_2			= 0x806c0300,
-	.dmm_lisa_map_3			= 0x806c0300,
+	.dmm_lisa_map_2			= 0x00000000,
+	.dmm_lisa_map_3			= 0x80640300,
 };
 
-static const struct ddr_data evm_ddr2_data = {
-	.datardsratio0		= ((0x35<<10) | (0x35<<0)),
-	.datawdsratio0		= ((0x20<<10) | (0x20<<0)),
+static const struct ddr_data evm_ddr3_emif0_data = {
+	.datardsratio0		= ((0x39<<10) | (0x39<<0)),
+	.datawdsratio0		= ((0x46<<10) | (0x46<<0)),
 	.datawiratio0		= ((0<<10) | (0<<0)),
 	.datagiratio0		= ((0<<10) | (0<<0)),
-	.datafwsratio0		= ((0x90<<10) | (0x90<<0)),
-	.datawrsratio0		= ((0x50<<10) | (0x50<<0)),
+	.datafwsratio0		= ((0x9e<<10) | (0x9e<<0)),
+	.datawrsratio0		= ((0x83<<10) | (0x83<<0)),
+};
+
+static const struct ddr_data evm_ddr3_emif1_data = {
+	.datardsratio0		= ((0x38<<10) | (0x38<<0)),
+	.datawdsratio0		= ((0x48<<10) | (0x48<<0)),
+	.datawiratio0		= ((0<<10) | (0<<0)),
+	.datagiratio0		= ((0<<10) | (0<<0)),
+	.datafwsratio0		= ((0x9e<<10) | (0x9e<<0)),
+	.datawrsratio0		= ((0x83<<10) | (0x83<<0)),
 };
 
 void set_uart_mux_conf(void)
@@ -95,10 +105,10 @@ void sdram_init(void)
 {
 	config_dmm(&evm_lisa_map_regs);
 
-	config_ddr(0, NULL, &evm_ddr2_data, &evm_ddr2_cctrl_data,
-		   &evm_ddr2_emif0_regs, 0);
-	config_ddr(0, NULL, &evm_ddr2_data, &evm_ddr2_cctrl_data,
-		   &evm_ddr2_emif1_regs, 1);
+	config_ddr(0, NULL, &evm_ddr3_emif0_data, &evm_ddr3_cctrl_data,
+		   &evm_ddr3_emif0_regs, 0);
+	config_ddr(0, NULL, &evm_ddr3_emif1_data, &evm_ddr3_cctrl_data,
+		   &evm_ddr3_emif1_regs, 1);
 }
 #endif
 
