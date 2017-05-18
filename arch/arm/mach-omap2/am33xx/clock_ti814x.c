@@ -422,6 +422,7 @@ void setup_clocks_for_console(void)
 void setup_early_clocks(void)
 {
 	setup_clocks_for_console();
+	timer_init();
 }
 
 /*
