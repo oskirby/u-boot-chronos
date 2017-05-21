@@ -39,9 +39,10 @@
 #define CONFIG_EXTRA_ENV_SETTINGS \
 	"loadaddr=0x80200000\0" \
 	"fdtaddr=0x80F80000\0" \
+	"fdt_high=0x91000000\n" \
 	"rdaddr=0x81000000\0" \
-	"fdtfile=chronos-14c.dtb\0" \
-	"console=ttyO4,115200n8\0" \
+	"fdtfile=dm8148-chronos.dtb\0" \
+	"console=ttyS4,115200n8\0" \
 	"optargs=\0" \
 	"mmcdev=0\0" \
 	"mmcroot=/dev/mmcblk0p2 ro\0" \
@@ -61,15 +62,18 @@
 		"root=${ramroot} " \
 		"rootfstype=${ramrootfstype}\0" \
 	"loadramdisk=fatload mmc ${mmcdev} ${rdaddr} ramdisk.gz\0" \
+	"loadfdtfile=fatload mmc ${mmcdev} ${fdtaddr} ${fdtfile}\0" \
 	"loaduimagefat=fatload mmc ${mmcdev} ${loadaddr} uImage\0" \
 	"loaduimage=ext2load mmc ${mmcdev}:2 ${loadaddr} uImage\0" \
 	"loadzimage=ext2load mmc ${mmcdev}:2 ${loadaddr} zImage\0" \
 	"mmcboot=echo Booting from mmc ...; " \
 		"run mmcargs; " \
-		"bootz ${loadaddr}\0" \
+		"run loadfdtfile;" \
+		"bootz ${loadaddr} - ${fdtaddr}\0" \
 	"ramboot=echo Booting from ramdisk ...; " \
 		"run ramargs; " \
-		"bootz ${loadaddr}\0" \
+		"run loadfdtfile;" \
+		"bootz ${loadaddr} - ${fdtaddr}\0" \
 
 #define CONFIG_BOOTCOMMAND \
 	"mmc dev ${mmcdev}; if mmc rescan; then " \

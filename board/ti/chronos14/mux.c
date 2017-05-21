@@ -28,8 +28,8 @@ static struct module_pin_mux uart0_pin_mux[] = {
 };
 
 static struct module_pin_mux uart4_pin_mux[] = {
-	{OFFSET(pincntl251), PULLUP_EN | MODE(0x20)},	/* UART0_RXD */
-	{OFFSET(pincntl252), PULLUP_EN | MODE(0x20)},	/* UART0_TXD */
+	{OFFSET(pincntl251), PULLUP_EN | MODE(0x20)},	/* UART4_RXD */
+	{OFFSET(pincntl252), PULLUP_EN | MODE(0x20)},	/* UART4_TXD */
 	{-1},
 };
 
