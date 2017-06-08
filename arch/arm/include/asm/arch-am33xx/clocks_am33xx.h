@@ -32,6 +32,7 @@
 #define CM_DLL_READYST		0x4
 
 extern void enable_dmm_clocks(void);
+extern void enable_eth_clocks(void);
 extern const struct dpll_params dpll_core_opp100;
 extern struct dpll_params dpll_mpu_opp100;
 

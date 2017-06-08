@@ -48,6 +48,11 @@
 #define DDR_M2			2
 #define DDR_CLKCTRL		0x801
 
+#define ETH_N			19
+#define ETH_M			500
+#define ETH_M2			2
+#define ETH_CLKCTRL		0x801
+
 /* ADPLLJ register values */
 #define ADPLLJ_CLKCTRL_HS2	0x00000801 /* HS2 mode, TINT2 = 1 */
 #define ADPLLJ_CLKCTRL_HS1	0x00001001 /* HS1 mode, TINT2 = 1 */
@@ -105,6 +110,8 @@ struct ad_pll {
 #define ENET_CLKCTRL_CMPL		0x30000
 
 #define SATA_PLL_BASE			(CTRL_BASE + 0x0720)
+#define AUDIO_PLL_BASE			(PLL_SUBSYS_BASE + 0x230)
+#define RMII_REFCLK_SRC			(PLL_SUBSYS_BASE + 0x2E8)
 
 struct sata_pll {
 	unsigned int pllcfg0;
@@ -380,6 +387,13 @@ void enable_dmm_clocks(void)
 		;
 }
 
+void __weak eth_pll_config(void)
+{
+	/* Select the Audio PLL for the Ethernet clock source and configure it for 250MHz. */
+	writel(0x4, RMII_REFCLK_SRC);
+	pll_config(AUDIO_PLL_BASE, ETH_N, ETH_M, ETH_M2, ETH_CLKCTRL, 1);
+}
+
 void setup_clocks_for_console(void)
 {
 	unlock_pll_control_mmr();
@@ -434,6 +448,7 @@ void prcm_init(void)
 	mpu_pll_config();
 	l3_pll_config();
 	sata_pll_config();
+	eth_pll_config();
 
 	/* Enable the required peripherals */
 	enable_per_clocks();

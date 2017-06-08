@@ -23,6 +23,8 @@
 #include <asm/io.h>
 #include <asm/emif.h>
 #include <asm/gpio.h>
+#include <miiphy.h>
+#include <micrel.h>
 #include "evm.h"
 
 DECLARE_GLOBAL_DATA_PTR;
@@ -117,6 +119,11 @@ void sdram_init(void)
  */
 int board_init(void)
 {
+	/* setup RMII_REFCLK to be sourced from audio_pll */
+	__raw_writel(0x4, PLL_SUBSYS_BASE + 0x2e8);
+	/* program GMII_SEL register for RGMII mode */
+	__raw_writel(0x31a, CTRL_BASE + 0x650);
+
 	gd->bd->bi_boot_params = CONFIG_SYS_SDRAM_BASE + 0x100;
 	return 0;
 }
@@ -142,12 +149,8 @@ static struct cpsw_slave_data cpsw_slaves[] = {
 	{
 		.slave_reg_ofs	= 0x50,
 		.sliver_reg_ofs	= 0x700,
-		.phy_addr	= 1,
-	},
-	{
-		.slave_reg_ofs	= 0x90,
-		.sliver_reg_ofs	= 0x740,
 		.phy_addr	= 0,
+		.phy_if = PHY_INTERFACE_MODE_RGMII,
 	},
 };
 
@@ -170,6 +173,24 @@ static struct cpsw_platform_data cpsw_data = {
 	.version		= CPSW_CTRL_VERSION_1,
 };
 #endif
+
+/* Configure KSZ9021 PHY delay parameters. */
+int board_phy_config(struct phy_device *phydev)
+{
+	/* min rx data delay */
+	ksz9021_phy_extended_write(phydev,
+			MII_KSZ9021_EXT_RGMII_RX_DATA_SKEW, 0x0);
+	/* min tx data delay */
+	ksz9021_phy_extended_write(phydev,
+			MII_KSZ9021_EXT_RGMII_TX_DATA_SKEW, 0x0);
+	/* max rx/tx clock delay, min rx/tx control */
+	ksz9021_phy_extended_write(phydev,
+			MII_KSZ9021_EXT_RGMII_CLOCK_SKEW, 0xf0f0);
+	if (phydev->drv->config)
+		phydev->drv->config(phydev);
+
+	return 0;
+}
 
 int board_eth_init(bd_t *bis)
 {
