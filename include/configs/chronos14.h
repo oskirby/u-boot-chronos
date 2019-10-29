@@ -42,7 +42,7 @@
 	"fdt_high=0x91000000\n" \
 	"rdaddr=0x81000000\0" \
 	"fdtfile=dm8148-chronos.dtb\0" \
-	"console=ttyS4,115200n8\0" \
+	"console=ttyO4,115200n8\0" \
 	"optargs=\0" \
 	"mmcdev=0\0" \
 	"mmcroot=/dev/mmcblk0p2 ro\0" \
@@ -54,6 +54,7 @@
 		"root=${mmcroot} " \
 		"rootfstype=${mmcrootfstype}\0" \
 	"bootenv=uEnv.txt\0" \
+	"bootfile=uImage\0" \
 	"loadbootenv=fatload mmc ${mmcdev} ${loadaddr} ${bootenv}\0" \
 	"importbootenv=echo Importing environment from mmc ...; " \
 		"env import -t $loadaddr $filesize\0" \
@@ -63,13 +64,16 @@
 		"rootfstype=${ramrootfstype}\0" \
 	"loadramdisk=fatload mmc ${mmcdev} ${rdaddr} ramdisk.gz\0" \
 	"loadfdtfile=fatload mmc ${mmcdev} ${fdtaddr} ${fdtfile}\0" \
-	"loaduimagefat=fatload mmc ${mmcdev} ${loadaddr} uImage\0" \
-	"loaduimage=ext2load mmc ${mmcdev}:2 ${loadaddr} uImage\0" \
-	"loadzimage=ext2load mmc ${mmcdev}:2 ${loadaddr} zImage\0" \
+	"loadimage=fatload mmc ${mmcdev} ${loadaddr} ${bootfile}\0" \
+	"mmcbootz=echo Booting from mmc with Device Tree ...; " \
+		"run mmcargs; " \
+		"run loadfdtfile; " \
+		"run loadimage; " \
+		"bootz ${loadaddr} - ${fdtaddr}\0" \
 	"mmcboot=echo Booting from mmc ...; " \
 		"run mmcargs; " \
-		"run loadfdtfile;" \
-		"bootz ${loadaddr} - ${fdtaddr}\0" \
+		"run loadimage; " \
+		"bootm ${loadaddr}\0" \
 	"ramboot=echo Booting from ramdisk ...; " \
 		"run ramargs; " \
 		"run loadfdtfile;" \
@@ -86,8 +90,10 @@
 			"echo Running uenvcmd ...;" \
 			"run uenvcmd;" \
 		"fi;" \
-		"if run loadzimage; then " \
-			"run mmcboot;" \
+		"if fatsize mmc ${mmcdev} ${fdtfile}; then " \
+			"run mmcbootz; " \
+		"else " \
+			"run mmcboot; " \
 		"fi;" \
 	"fi;" \
 
