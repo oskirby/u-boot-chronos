@@ -53,6 +53,21 @@
 #define ETH_M2			2
 #define ETH_CLKCTRL		0x801
 
+#define DSP_N			19
+#define DSP_M			500
+#define DSP_M2			1
+#define DSP_CLKCTRL		0x801
+
+#define IVA_N			19
+#define IVA_M			900
+#define IVA_M2			2
+#define IVA_CLKCTRL		0x801
+
+#define ISS_N			19
+#define ISS_M			800
+#define ISS_M2			2
+#define ISS_CLKCTRL		0x801
+
 /* ADPLLJ register values */
 #define ADPLLJ_CLKCTRL_HS2	0x00000801 /* HS2 mode, TINT2 = 1 */
 #define ADPLLJ_CLKCTRL_HS1	0x00001001 /* HS1 mode, TINT2 = 1 */
@@ -87,6 +102,9 @@
 #define MPU_PLL_BASE			(PLL_SUBSYS_BASE + 0x048)
 #define L3_PLL_BASE			(PLL_SUBSYS_BASE + 0x110)
 #define DDR_PLL_BASE			(PLL_SUBSYS_BASE + 0x290)
+#define DSP_PLL_BASE			(PLL_SUBSYS_BASE + 0x080)
+#define ISS_PLL_BASE			(PLL_SUBSYS_BASE + 0x140)
+#define IVA_PLL_BASE			(PLL_SUBSYS_BASE + 0x0E0)
 
 struct ad_pll {
 	unsigned int pwrctrl;
@@ -344,6 +362,22 @@ void ddr_pll_config(unsigned int ddrpll_m)
 	pll_config(DDR_PLL_BASE, DDR_N, DDR_M, DDR_M2, DDR_CLKCTRL, 1);
 }
 
+static void dsp_pll_config(void)
+{
+	pll_config(DSP_PLL_BASE, DSP_N, DSP_M, DSP_M2, DSP_CLKCTRL, 1);
+}
+
+static void iss_pll_config(void)
+{
+	pll_config(ISS_PLL_BASE, ISS_N, ISS_M, ISS_M2, ISS_CLKCTRL, 1);
+}
+
+static void iva_pll_config(void)
+{
+	pll_config(IVA_PLL_BASE, IVA_N, IVA_M, IVA_M2, IVA_CLKCTRL, 1);
+}
+
+
 void sata_pll_config(void)
 {
 	/*
@@ -464,6 +498,11 @@ void prcm_init(void)
 	l3_pll_config();
 	sata_pll_config();
 	eth_pll_config();
+
+	/* Configure coprocessor clocks. */
+	dsp_pll_config();
+	iss_pll_config();
+	iva_pll_config();
 
 	/* Enable the required peripherals */
 	enable_per_clocks();
