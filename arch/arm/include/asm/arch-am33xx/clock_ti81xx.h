@@ -14,6 +14,8 @@
 #define PRCM_MOD_EN     0x2
 
 #define CM_DEFAULT_BASE (PRCM_BASE + 0x0500)
+#define CM_DSS_BASE		(PRCM_BASE + 0x0800)
+#define PRM_DSS_BASE	(PRCM_BASE + 0x0E00)
 #define CM_ALWON_BASE   (PRCM_BASE + 0x1400)
 
 struct cm_def {
@@ -35,6 +37,21 @@ struct cm_def {
 	unsigned int resv6[4];
 	unsigned int ducaticlkctrl;
 	unsigned int pciclkctrl;
+};
+
+struct cm_dss {
+	unsigned int clkstctrl;
+	unsigned int resv0[7];
+	unsigned int dssclkstctrl;
+	unsigned int hdmiclkstctrl;
+};
+
+struct prm_dss {
+	unsigned int pwrstctrl;
+	unsigned int pwrstst;
+	unsigned int resv0[2];
+	unsigned int rstctrl;
+	unsigned int rstst;
 };
 
 struct cm_alwon {
@@ -138,5 +155,14 @@ struct cm_alwon {
 	unsigned int sr1clkctrl;
 #endif
 };
+
+struct adpll_params {
+	u32 m;
+	u32 n;
+	u32 m2;
+	u32 clkctrl;
+};
+
+void do_setup_adpll(u32 base, const struct adpll_params *, int adpllj);
 
 #endif /* _CLOCK_TI81XX_H_ */

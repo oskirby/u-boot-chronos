@@ -63,6 +63,44 @@ static struct module_pin_mux enet_pin_mux[] = {
 	{OFFSET(pincntl247), MODE(0x01)},				/* EMAC[0]_TXD[1] */
 };
 
+static struct module_pin_mux lcd_pin_mux[] = {
+	{OFFSET(pincntl176), MODE(0x01)},	/* VOUT[0]_CLK */
+	{OFFSET(pincntl177), MODE(0x01)},	/* VOUT[0]_HSYNC */
+	{OFFSET(pincntl178), MODE(0x01)},	/* VOUT[0]_VSYNC */
+	{OFFSET(pincntl179), MODE(0x01)},	/* VOUT[0]_AVID */
+	/* LCD Red Channel */
+	{OFFSET(pincntl196), MODE(0x01)},	/* VOUT[0]_R_CR[2] */
+	{OFFSET(pincntl197), MODE(0x01)},	/* VOUT[0]_R_CR[3] */
+	{OFFSET(pincntl198), MODE(0x01)},	/* VOUT[0]_R_CR[4] */
+	{OFFSET(pincntl199), MODE(0x01)},	/* VOUT[0]_R_CR[5] */
+	{OFFSET(pincntl200), MODE(0x01)},	/* VOUT[0]_R_CR[6] */
+	{OFFSET(pincntl201), MODE(0x01)},	/* VOUT[0]_R_CR[7] */
+	{OFFSET(pincntl202), MODE(0x01)},	/* VOUT[0]_R_CR[8] */
+	{OFFSET(pincntl203), MODE(0x01)},	/* VOUT[0]_R_CR[9] */
+	/* LCD Green Channel */
+	{OFFSET(pincntl188), MODE(0x01)},	/* VOUT[0]_G_Y_YC[2] */
+	{OFFSET(pincntl189), MODE(0x01)},	/* VOUT[0]_G_Y_YC[3] */
+	{OFFSET(pincntl190), MODE(0x01)},	/* VOUT[0]_G_Y_YC[4] */
+	{OFFSET(pincntl191), MODE(0x01)},	/* VOUT[0]_G_Y_YC[5] */
+	{OFFSET(pincntl192), MODE(0x01)},	/* VOUT[0]_G_Y_YC[6] */
+	{OFFSET(pincntl193), MODE(0x01)},	/* VOUT[0]_G_Y_YC[7] */
+	{OFFSET(pincntl194), MODE(0x01)},	/* VOUT[0]_G_Y_YC[8] */
+	{OFFSET(pincntl195), MODE(0x01)},	/* VOUT[0]_G_Y_YC[9] */
+	/* LCD Blue Channel */
+	{OFFSET(pincntl180), MODE(0x01)},	/* VOUT[0]_B_CB_C[2] */
+	{OFFSET(pincntl181), MODE(0x01)},	/* VOUT[0]_B_CB_C[3] */
+	{OFFSET(pincntl182), MODE(0x01)},	/* VOUT[0]_B_CB_C[4] */
+	{OFFSET(pincntl183), MODE(0x01)},	/* VOUT[0]_B_CB_C[5] */
+	{OFFSET(pincntl184), MODE(0x01)},	/* VOUT[0]_B_CB_C[6] */
+	{OFFSET(pincntl185), MODE(0x01)},	/* VOUT[0]_B_CB_C[7] */
+	{OFFSET(pincntl186), MODE(0x01)},	/* VOUT[0]_B_CB_C[8] */
+	{OFFSET(pincntl187), MODE(0x01)},	/* VOUT[0]_B_CB_C[9] */
+	/* Misc GPIOs */
+	{OFFSET(pincntl39),  PULLUP_EN | MODE(0x80)},	/* LCD DispOn */
+	{OFFSET(pincntl40),  PULLUP_EN | MODE(0x80)},	/* LCD ScanDir */
+	{OFFSET(pincntl47),  PULLUP_EN | MODE(0x80)},	/* BacklightControl */
+};
+
 void enable_uart0_pin_mux(void)
 {
 	configure_module_pin_mux(uart0_pin_mux);
@@ -81,4 +119,9 @@ void enable_mmc1_pin_mux(void)
 void enable_enet_pin_mux(void)
 {
 	configure_module_pin_mux(enet_pin_mux);
+}
+
+void enable_lcd_pin_mux(void)
+{
+	configure_module_pin_mux(lcd_pin_mux);
 }

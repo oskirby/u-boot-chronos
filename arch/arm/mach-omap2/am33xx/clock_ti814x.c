@@ -110,6 +110,7 @@ struct ad_pll {
 #define ENET_CLKCTRL_CMPL		0x30000
 
 #define SATA_PLL_BASE			(CTRL_BASE + 0x0720)
+#define DSS_PLL_BASE			(PLL_SUBSYS_BASE + 0x170)
 #define AUDIO_PLL_BASE			(PLL_SUBSYS_BASE + 0x230)
 #define RMII_REFCLK_SRC			(PLL_SUBSYS_BASE + 0x2E8)
 
@@ -302,6 +303,11 @@ static void pll_config(u32 base, u32 n, u32 m, u32 m2,
 		;
 }
 
+void do_setup_adpll(u32 base, const struct adpll_params *params, int adpllj)
+{
+	pll_config(base, params->n, params->m, params->m2, params->clkctrl, adpllj);
+}
+
 static void unlock_pll_control_mmr(void)
 {
 	/* TRM 2.10.1.4 and 3.2.7-3.2.11 */
@@ -427,6 +433,15 @@ void setup_clocks_for_console(void)
 	/* UART5 */
 	writel(PRCM_MOD_EN, &cmalwon->uart5clkctrl);
 	while (readl(&cmalwon->uart5clkctrl) != PRCM_MOD_EN)
+		;
+
+	/* GPIO0 */
+	writel(PRCM_MOD_EN, &cmalwon->gpio0clkctrl);
+	while (readl(&cmalwon->gpio0clkctrl) != PRCM_MOD_EN)
+		;
+	/* GPIO1 */
+	writel(PRCM_MOD_EN, &cmalwon->gpio1clkctrl);
+	while (readl(&cmalwon->gpio1clkctrl) != PRCM_MOD_EN)
 		;
 }
 

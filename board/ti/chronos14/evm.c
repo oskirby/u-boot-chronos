@@ -101,6 +101,9 @@ void set_mux_conf_regs(void)
 
 	/* Set Ethernet pins */
 	enable_enet_pin_mux();
+
+	/* Set LCD pins */
+	enable_lcd_pin_mux();
 }
 
 void sdram_init(void)
