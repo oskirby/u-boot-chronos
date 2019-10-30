@@ -52,7 +52,9 @@
 	"mmcargs=setenv bootargs console=${console} " \
 		"${optargs} " \
 		"root=${mmcroot} " \
-		"rootfstype=${mmcrootfstype}\0" \
+		"rootfstype=${mmcrootfstype} " \
+		"mem=364M@0x80000000 mem=320M@0x9FC00000 vmalloc=500M " \
+		"notifyk.vpssm3_sva=0xBF900000\0" \
 	"bootenv=uEnv.txt\0" \
 	"bootfile=uImage\0" \
 	"loadbootenv=fatload mmc ${mmcdev} ${loadaddr} ${bootenv}\0" \
