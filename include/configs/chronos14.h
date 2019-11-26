@@ -43,6 +43,7 @@
 	"rdaddr=0x81000000\0" \
 	"fdtfile=dm8148-chronos.dtb\0" \
 	"console=ttyO4,115200n8\0" \
+	"videomode=video=ctfb:x:800,y:480,depth:24,pclk_khz:33500,le:49,ri:204,up:23,lo:10,hs:20,vs:10,sync:3,vmode:0\0" \
 	"optargs=\0" \
 	"mmcdev=0\0" \
 	"mmcroot=/dev/mmcblk0p2 ro\0" \

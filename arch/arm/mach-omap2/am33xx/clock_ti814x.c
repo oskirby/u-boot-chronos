@@ -250,11 +250,12 @@ static u32 pll_sigma_delta_val(u32 clkout_dco)
  * configure individual ADPLLJ
  */
 static void pll_config(u32 base, u32 n, u32 m, u32 m2,
-		       u32 clkctrl_val, int adpllj)
+		       u32 clkctrl_val)
 {
 	const struct ad_pll *adpll = (struct ad_pll *)base;
 	u32 m2nval, mn2val, read_clkctrl = 0, clkout_dco = 0;
 	u32 sig_val = 0, hs_mod = 0;
+	int adpllj = (base != MPU_PLL_BASE); /* Only the Cortex-A8 MPU is of type DPLLS) */
 
 	m2nval = (m2 << ADPLLJ_M2NDIV_M2SHIFT) | n;
 	mn2val = m;
@@ -321,9 +322,9 @@ static void pll_config(u32 base, u32 n, u32 m, u32 m2,
 		;
 }
 
-void do_setup_adpll(u32 base, const struct adpll_params *params, int adpllj)
+void do_setup_adpll(u32 base, const struct adpll_params *params)
 {
-	pll_config(base, params->n, params->m, params->m2, params->clkctrl, adpllj);
+	pll_config(base, params->n, params->m, params->m2, params->clkctrl);
 }
 
 static void unlock_pll_control_mmr(void)
@@ -339,7 +340,7 @@ static void unlock_pll_control_mmr(void)
 
 static void mpu_pll_config(void)
 {
-	pll_config(MPU_PLL_BASE, MPU_N, MPU_M, MPU_M2, MPU_CLKCTRL, 0);
+	pll_config(MPU_PLL_BASE, MPU_N, MPU_M, MPU_M2, MPU_CLKCTRL);
 }
 
 static void l3_pll_config(void)
@@ -354,27 +355,27 @@ static void l3_pll_config(void)
 	else
 		writel((rd_osc_src & 0xfffffffe)|0x1, OSC_SRC_CTRL);
 
-	pll_config(L3_PLL_BASE, L3_N, L3_M, L3_M2, L3_CLKCTRL, 1);
+	pll_config(L3_PLL_BASE, L3_N, L3_M, L3_M2, L3_CLKCTRL);
 }
 
 void ddr_pll_config(unsigned int ddrpll_m)
 {
-	pll_config(DDR_PLL_BASE, DDR_N, DDR_M, DDR_M2, DDR_CLKCTRL, 1);
+	pll_config(DDR_PLL_BASE, DDR_N, DDR_M, DDR_M2, DDR_CLKCTRL);
 }
 
 static void dsp_pll_config(void)
 {
-	pll_config(DSP_PLL_BASE, DSP_N, DSP_M, DSP_M2, DSP_CLKCTRL, 1);
+	pll_config(DSP_PLL_BASE, DSP_N, DSP_M, DSP_M2, DSP_CLKCTRL);
 }
 
 static void iss_pll_config(void)
 {
-	pll_config(ISS_PLL_BASE, ISS_N, ISS_M, ISS_M2, ISS_CLKCTRL, 1);
+	pll_config(ISS_PLL_BASE, ISS_N, ISS_M, ISS_M2, ISS_CLKCTRL);
 }
 
 static void iva_pll_config(void)
 {
-	pll_config(IVA_PLL_BASE, IVA_N, IVA_M, IVA_M2, IVA_CLKCTRL, 1);
+	pll_config(IVA_PLL_BASE, IVA_N, IVA_M, IVA_M2, IVA_CLKCTRL);
 }
 
 
@@ -431,7 +432,7 @@ void __weak eth_pll_config(void)
 {
 	/* Select the Audio PLL for the Ethernet clock source and configure it for 250MHz. */
 	writel(0x4, RMII_REFCLK_SRC);
-	pll_config(AUDIO_PLL_BASE, ETH_N, ETH_M, ETH_M2, ETH_CLKCTRL, 1);
+	pll_config(AUDIO_PLL_BASE, ETH_N, ETH_M, ETH_M2, ETH_CLKCTRL);
 }
 
 void setup_clocks_for_console(void)

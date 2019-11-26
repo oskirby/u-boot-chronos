@@ -163,6 +163,6 @@ struct adpll_params {
 	u32 clkctrl;
 };
 
-void do_setup_adpll(u32 base, const struct adpll_params *, int adpllj);
+void do_setup_adpll(u32 base, const struct adpll_params *);
 
 #endif /* _CLOCK_TI81XX_H_ */
